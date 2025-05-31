@@ -2,41 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Graph: Linear Equations</title>
+  <title>Linear Equations Graph</title>
   <style>
     body {
       margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #d6d8ff, #e3e9ff);
-      font-family: 'Segoe UI', sans-serif;
     }
 
     .card {
-      backdrop-filter: blur(15px);
-      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.08);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       border-radius: 20px;
       padding: 2rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     h2 {
-      color: #222;
+      color: #4b0082;
       margin-bottom: 1rem;
-      backdrop-filter: blur(0px);
     }
 
     canvas {
       border-radius: 12px;
-      background: white;
-      border: 2px solid #ccc;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: #fff;
+      border: 2px solid #c084fc;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (max-width: 700px) {
@@ -49,7 +48,7 @@
 </head>
 <body>
   <div class="card">
-    <h2>Linear Equation Graph</h2>
+    <h2>Linear Equations on Graph</h2>
     <canvas id="graph" width="600" height="600"></canvas>
   </div>
 
@@ -61,26 +60,43 @@
     const height = canvas.height;
     const originX = width / 2;
     const originY = height / 2;
-    const scale = 30; // 1 unit = 30px
+    const scale = 30;
 
+    // Draw grid with labels
     function drawGrid() {
       ctx.strokeStyle = '#eee';
       ctx.lineWidth = 1;
-      for (let x = 0; x <= width; x += scale) {
+      ctx.font = "12px Segoe UI";
+      ctx.fillStyle = "#555";
+
+      // Vertical lines and x-axis labels
+      for (let x = -10; x <= 10; x++) {
+        const px = originX + x * scale;
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, height);
         ctx.stroke();
+
+        if (x !== 0) {
+          ctx.fillText(x, px - 4, originY + 14);
+        }
       }
-      for (let y = 0; y <= height; y += scale) {
+
+      // Horizontal lines and y-axis labels
+      for (let y = -10; y <= 10; y++) {
+        const py = originY - y * scale;
         ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
+        ctx.moveTo(0, py);
+        ctx.lineTo(width, py);
         ctx.stroke();
+
+        if (y !== 0) {
+          ctx.fillText(y, originX + 6, py + 4);
+        }
       }
 
       // Axes
-      ctx.strokeStyle = '#444';
+      ctx.strokeStyle = '#4b0082';
       ctx.lineWidth = 2;
 
       // X-axis
@@ -94,9 +110,16 @@
       ctx.moveTo(originX, 0);
       ctx.lineTo(originX, height);
       ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = "#4b0082";
+      ctx.font = "bold 14px Segoe UI";
+      ctx.fillText("X", width - 20, originY - 10);
+      ctx.fillText("Y", originX + 10, 20);
     }
 
-    function drawLine(m, b, color) {
+    // Draw line for y = mx + b
+    function drawLine(m, b, color, label) {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
 
@@ -113,13 +136,22 @@
         }
       }
       ctx.stroke();
+
+      // Label the equation near right side
+      const xLabel = 8;
+      const yLabel = m * xLabel + b;
+      const labelX = originX + xLabel * scale + 5;
+      const labelY = originY - yLabel * scale;
+      ctx.fillStyle = color;
+      ctx.font = "bold 13px Segoe UI";
+      ctx.fillText(label, labelX, labelY);
     }
 
     drawGrid();
-    drawLine(1, 1, 'red');       // y = x + 1
-    drawLine(-1, 4, 'blue');     // y = -x + 4
-    drawLine(2, -3, 'green');    // y = 2x - 3
-    drawLine(-0.5, 2, 'purple'); // y = -0.5x + 2
+    drawLine(1, 1, '#d946ef', "y = x + 1");
+    drawLine(-1, 4, '#7dd3fc', "y = -x + 4");
+    drawLine(2, -3, '#a3e635', "y = 2x - 3");
+    drawLine(-0.5, 2, '#c084fc', "y = -0.5x + 2");
   </script>
 </body>
 </html>
