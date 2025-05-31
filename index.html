@@ -1,157 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Linear Equations Graph</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linear Equation Graph</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-      height: 100vh;
+      background: linear-gradient(to right top, #7b2cbf, #9d4edd, #c77dff);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-
     .card {
       backdrop-filter: blur(20px);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
       border-radius: 20px;
       padding: 2rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
+      color: #fff;
+      max-width: 700px;
     }
-
-    h2 {
-      color: #4b0082;
-      margin-bottom: 1rem;
-    }
-
     canvas {
-      border-radius: 12px;
-      background: #fff;
-      border: 2px solid #c084fc;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-
-    @media (max-width: 700px) {
-      canvas {
-        width: 90vw;
-        height: 90vw;
-      }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #f8f0fc;
+    }
+    p {
+      font-size: 14px;
+      color: #e0aaff;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>Linear Equations on Graph</h2>
+    <h2>Linear Equations on a Graph</h2>
+    <p>Colored graph lines for equations in the form <strong>y = mx + b</strong></p>
     <canvas id="graph" width="600" height="600"></canvas>
   </div>
 
   <script>
-    const canvas = document.getElementById('graph');
-    const ctx = canvas.getContext('2d');
-
+    const canvas = document.getElementById("graph");
+    const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
     const originX = width / 2;
     const originY = height / 2;
     const scale = 30;
 
-    // Draw grid with labels
+    // Draw Grid
     function drawGrid() {
-      ctx.strokeStyle = '#eee';
+      ctx.strokeStyle = "#eee";
       ctx.lineWidth = 1;
-      ctx.font = "12px Segoe UI";
-      ctx.fillStyle = "#555";
+      ctx.font = "10px Segoe UI";
+      ctx.fillStyle = "#666";
 
-      // Vertical lines and x-axis labels
       for (let x = -10; x <= 10; x++) {
-        const px = originX + x * scale;
+        let px = originX + x * scale;
         ctx.beginPath();
         ctx.moveTo(px, 0);
         ctx.lineTo(px, height);
         ctx.stroke();
-
-        if (x !== 0) {
-          ctx.fillText(x, px - 4, originY + 14);
-        }
+        if (x !== 0) ctx.fillText(x, px - 5, originY + 12);
       }
 
-      // Horizontal lines and y-axis labels
       for (let y = -10; y <= 10; y++) {
-        const py = originY - y * scale;
+        let py = originY - y * scale;
         ctx.beginPath();
         ctx.moveTo(0, py);
         ctx.lineTo(width, py);
         ctx.stroke();
-
-        if (y !== 0) {
-          ctx.fillText(y, originX + 6, py + 4);
-        }
+        if (y !== 0) ctx.fillText(y, originX + 5, py + 3);
       }
 
       // Axes
-      ctx.strokeStyle = '#4b0082';
+      ctx.strokeStyle = "#6a0dad";
       ctx.lineWidth = 2;
-
-      // X-axis
       ctx.beginPath();
       ctx.moveTo(0, originY);
       ctx.lineTo(width, originY);
       ctx.stroke();
 
-      // Y-axis
       ctx.beginPath();
       ctx.moveTo(originX, 0);
       ctx.lineTo(originX, height);
       ctx.stroke();
 
-      // Axis labels
-      ctx.fillStyle = "#4b0082";
-      ctx.font = "bold 14px Segoe UI";
-      ctx.fillText("X", width - 20, originY - 10);
-      ctx.fillText("Y", originX + 10, 20);
+      ctx.fillStyle = "#6a0dad";
+      ctx.fillText("X", width - 15, originY - 5);
+      ctx.fillText("Y", originX + 5, 10);
     }
 
-    // Draw line for y = mx + b
+    // Draw Line y = mx + b
     function drawLine(m, b, color, label) {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
-
       ctx.beginPath();
+      let first = true;
       for (let x = -10; x <= 10; x += 0.1) {
-        const y = m * x + b;
-        const canvasX = originX + x * scale;
-        const canvasY = originY - y * scale;
-
-        if (x === -10) {
+        let y = m * x + b;
+        let canvasX = originX + x * scale;
+        let canvasY = originY - y * scale;
+        if (first) {
           ctx.moveTo(canvasX, canvasY);
+          first = false;
         } else {
           ctx.lineTo(canvasX, canvasY);
         }
       }
       ctx.stroke();
 
-      // Label the equation near right side
-      const xLabel = 8;
-      const yLabel = m * xLabel + b;
-      const labelX = originX + xLabel * scale + 5;
-      const labelY = originY - yLabel * scale;
+      // Label line
+      let labelX = originX + 6 * scale;
+      let labelY = originY - (m * 6 + b) * scale;
       ctx.fillStyle = color;
       ctx.font = "bold 13px Segoe UI";
-      ctx.fillText(label, labelX, labelY);
+      ctx.fillText(label, labelX + 5, labelY);
     }
 
     drawGrid();
-    drawLine(1, 1, '#d946ef', "y = x + 1");
-    drawLine(-1, 4, '#7dd3fc', "y = -x + 4");
-    drawLine(2, -3, '#a3e635', "y = 2x - 3");
-    drawLine(-0.5, 2, '#c084fc', "y = -0.5x + 2");
+    drawLine(1, 2, "#ff66c4", "y = x + 2");
+    drawLine(-0.5, 3, "#40c4ff", "y = -0.5x + 3");
+    drawLine(2, -4, "#81f281", "y = 2x - 4");
+    drawLine(-1, 0, "#ffb347", "y = -x");
   </script>
 </body>
 </html>
